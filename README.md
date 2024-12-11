@@ -12,14 +12,13 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 nix-shell -p git --run 'git clone '
 `
 
-## 3. Install
-
-## make symlink
+## 3. Make symblink
 `
 cd ~/.gotfiles
-stow -vt ~ */
+nix-shell -p stow --run 'stow -vt ~ */'
 `
-## update symlink
+
+### 3.1 update symlink
 ### rm -rf file or dir that made symlink before
 ### make again
 `
@@ -27,9 +26,6 @@ cd ~/.gotfiles
 stow -vt ~ */
 `
 
-
-## Install home-manager
-### refer: https://dev.to/synecdokey/nix-on-macos-2oj3
 
 ## Install nix-darwin
 ### Step 1. Create flake-nix
@@ -41,12 +37,20 @@ sed -i '' "s/simple/$(scutil --get LocalHostName)/" flake.nix
 `
 ### Step 2. Installing nix-darwin
 `
-nix run nix-darwin -- switch --flake ~/.config/nix-darwin
+nix run nix-darwin -- switch --flake ~/.dotfiles/nix-darwin/.config/nix-darwin
 `
 ### Step 3. Using nix-darwin
 `
-darwin-rebuild switch --flake ~/.config/nix-darwin
+darwin-rebuild switch --flake ~/.dotfiles/nix-darwin/.config/nix-darwin
 `
+### (Optional) Update nix packages:
+`
+nix flake update
+`
+#### then it will update flake.lock, then run:
+`darwin-rebuild switch --flake ~/.dotfiles/nix-darwin/.config/nix-darwin`
+
+
 ### refer: https://github.com/LnL7/nix-darwin?tab=readme-ov-file
 
 ## How to backup dotfiles
